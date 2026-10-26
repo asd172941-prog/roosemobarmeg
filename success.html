@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>تم إرسال طلبك بنجاح</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{
+    font-family:'Cairo',sans-serif;
+    background:#0b0f19;
+    color:#e5e7eb;
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:24px;
+    line-height:1.8;
+    text-align:center;
+  }
+  .box{
+    max-width:600px;
+    background:#151c2c;
+    border:1px solid #1f2937;
+    border-radius:20px;
+    padding:50px 32px;
+    box-shadow:0 20px 60px rgba(0,0,0,.4);
+  }
+  .check{
+    width:80px;height:80px;border-radius:50%;
+    background:linear-gradient(135deg,#22d3ee,#a855f7);
+    display:grid;place-items:center;
+    margin:0 auto 24px;
+    font-size:44px;
+    color:#0b0f19;
+    font-weight:900;
+  }
+  h1{
+    font-size:28px;
+    font-weight:900;
+    margin-bottom:16px;
+    background:linear-gradient(90deg,#22d3ee,#a855f7);
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
+  }
+  p{color:#94a3b8;font-size:16px;margin-bottom:14px;}
+  .back{
+    display:inline-block;margin-top:26px;padding:12px 30px;
+    border-radius:10px;font-weight:700;text-decoration:none;
+    background:linear-gradient(135deg,#22d3ee,#a855f7);
+    color:#0b0f19;
+    transition:.25s;
+  }
+  .back:hover{transform:translateY(-2px);box-shadow:0 10px 30px rgba(34,211,238,.35);}
+</style>
+</head>
+<body>
+  <div class="box">
+    <div class="check">✓</div>
+    <h1>تم إرسال طلبك بنجاح</h1>
+    <p>سيتم الرد عليك خلال 24 ساعة من الرقم الذي أدخلته في التواصل الخاص بك على واتساب.</p>
+    <p>شكراً لك على ثقتك.</p>
+    <a href="index.html" class="back">العودة للرئيسية</a>
+  </div>
+</body>
+</html>
