@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>شحن فري فاير و ببجي | أرخص سعر في مصر</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0a0e1a;
+    --bg2:#111827;
+    --card:#151c2c;
+    --card-hover:#1c2538;
+    --accent:#ff4d6d;
+    --accent2:#ff9e00;
+    --ff:#ff8a00;
+    --pubg:#f7b733;
+    --text:#e5e7eb;
+    --muted:#94a3b8;
+    --border:#1f2937;
+    --success:#22c55e;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    font-family:'Cairo',sans-serif;
+    background:var(--bg);
+    color:var(--text);
+    line-height:1.7;
+    overflow-x:hidden;
+  }
+
+  /* Header */
+  header{
+    position:sticky;top:0;z-index:50;
+    background:rgba(10,14,26,.9);
+    backdrop-filter:blur(12px);
+    border-bottom:1px solid var(--border);
+  }
+  nav{
+    max-width:1200px;margin:auto;padding:16px 24px;
+    display:flex;justify-content:space-between;align-items:center;
+  }
+  .logo{font-size:22px;font-weight:900;background:linear-gradient(90deg,var(--accent),var(--accent2));-webkit-background-clip:text;background-clip:text;color:transparent;}
+  .logo small{font-size:12px;color:var(--muted);font-weight:400;-webkit-text-fill-color:var(--muted);display:block;margin-top:2px;}
+
+  /* Hero */
+  .hero{
+    max-width:1200px;margin:auto;padding:60px 24px 40px;text-align:center;
+  }
+  .hero h1{
+    font-size:clamp(28px,5vw,48px);font-weight:900;line-height:1.2;margin-bottom:16px;
+  }
+  .hero h1 span{background:linear-gradient(90deg,var(--accent),var(--accent2));-webkit-background-clip:text;background-clip:text;color:transparent;}
+  .hero p{color:var(--muted);font-size:17px;max-width:600px;margin:0 auto 30px;}
+  .hero-badges{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;}
+  .hero-badges span{
+    padding:8px 18px;border-radius:100px;font-size:14px;font-weight:700;
+    background:rgba(255,77,109,.1);border:1px solid rgba(255,77,109,.3);color:#ff4d6d;
+  }
+
+  /* Section */
+  section{max-width:1200px;margin:auto;padding:40px 24px;}
+  .section-title{text-align:center;margin-bottom:36px;}
+  .section-title h2{font-size:clamp(24px,4vw,34px);font-weight:900;margin-bottom:8px;}
+  .section-title h2 span{color:var(--accent);}
+  .section-title p{color:var(--muted);}
+
+  /* Step indicator */
+  .steps{
+    display:flex;justify-content:center;gap:12px;margin-bottom:40px;flex-wrap:wrap;
+  }
+  .step{
+    padding:8px 18px;border-radius:100px;font-size:13px;font-weight:700;
+    background:var(--card);border:1px solid var(--border);color:var(--muted);
+    transition:.3s;
+  }
+  .step.active{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#0a0e1a;border-color:transparent;}
+  .step.done{background:rgba(34,197,94,.15);color:#22c55e;border-color:#22c55e;}
+
+  /* Game Selection */
+  .games{display:grid;grid-template-columns:1fr 1fr;gap:20px;max-width:800px;margin:auto;}
+  @media(max-width:600px){.games{grid-template-columns:1fr;}}
+  .game-card{
+    background:var(--card);border:2px solid var(--border);border-radius:18px;
+    padding:36px 24px;text-align:center;cursor:pointer;transition:.3s;
+    position:relative;overflow:hidden;
+  }
+  .game-card:hover{transform:translateY(-4px);border-color:var(--accent);}
+  .game-card.selected{border-color:var(--accent);background:var(--card-hover);box-shadow:0 0 0 4px rgba(255,77,109,.15);}
+  .game-icon{
+    width:80px;height:80px;border-radius:20px;display:grid;place-items:center;
+    font-size:40px;margin:0 auto 16px;font-weight:900;
+  }
+  .game-icon.ff{background:linear-gradient(135deg,#ff8a00,#ff4d00);color:#fff;}
+  .game-icon.pubg{background:linear-gradient(135deg,#f7b733,#fc4a1a);color:#fff;}
+  .game-card h3{font-size:22px;margin-bottom:6px;}
+  .game-card p{color:var(--muted);font-size:14px;}
+
+  /* Packages */
+  .game-panel{display:none;}
+  .game-panel.active{display:block;}
+
+  .packages-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(180px,1fr));
+    gap:14px;
+  }
+  .pkg{
+    background:var(--card);border:2px solid var(--border);border-radius:14px;
+    padding:18px 14px;text-align:center;cursor:pointer;transition:.25s;
+    position:relative;
+  }
+  .pkg:hover{border-color:var(--accent);transform:translateY(-3px);}
+  .pkg.selected{
+    border-color:var(--accent);background:var(--card-hover);
+    box-shadow:0 0 0 3px rgba(255,77,109,.15);
+  }
+  .pkg .amount{font-size:20px;font-weight:900;color:var(--text);margin-bottom:4px;}
+  .pkg .amount small{font-size:13px;color:var(--muted);font-weight:600;}
+  .pkg .price{font-size:18px;font-weight:700;color:var(--accent);}
+  .pkg .price small{font-size:12px;color:var(--muted);}
+  .pkg .badge-best{
+    position:absolute;top:-8px;right:12px;
+    background:linear-gradient(135deg,var(--accent),var(--accent2));
+    color:#0a0e1a;font-size:10px;font-weight:900;padding:3px 10px;border-radius:100px;
+  }
+
+  /* Form */
+  .order-form{
+    max-width:600px;margin:0 auto;
+    background:var(--card);border:1px solid var(--border);border-radius:20px;
+    padding:36px 28px;
+  }
+  .order-form h3{
+    text-align:center;font-size:22px;margin-bottom:24px;
+  }
+  .summary{
+    background:var(--bg2);border-radius:12px;padding:16px 20px;margin-bottom:24px;
+    border:1px solid var(--border);
+  }
+  .summary-row{
+    display:flex;justify-content:space-between;align-items:center;
+    padding:8px 0;font-size:15px;
+  }
+  .summary-row:not(:last-child){border-bottom:1px dashed var(--border);}
+  .summary-row span:first-child{color:var(--muted);}
+  .summary-row span:last-child{font-weight:700;}
+  .summary-row.total span:last-child{color:var(--accent);font-size:18px;}
+
+  .form-group{margin-bottom:18px;}
+  .form-group label{display:block;margin-bottom:8px;font-weight:700;font-size:15px;}
+  .form-group label .req{color:#ef4444;}
+  .form-group input{
+    width:100%;padding:14px 16px;border-radius:10px;
+    background:var(--bg2);border:1px solid var(--border);
+    color:var(--text);font-family:inherit;font-size:15px;transition:.2s;
+  }
+  .form-group input:focus{
+    outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(255,77,109,.15);
+  }
+  .form-group input.invalid{
+    border-color:#ef4444;
+  }
+  .form-group .hint{font-size:12px;color:var(--muted);margin-top:6px;}
+  .error-text{font-size:12px;color:#f87171;margin-top:6px;display:none;}
+  .error-text.show{display:block;}
+
+  .btn-submit{
+    width:100%;padding:16px;border:none;border-radius:12px;
+    font-family:inherit;font-size:17px;font-weight:900;cursor:pointer;
+    background:linear-gradient(135deg,#25d366,#128c7e);
+    color:#fff;transition:.25s;
+    display:flex;align-items:center;justify-content:center;gap:10px;
+  }
+  .btn-submit:hover{transform:translateY(-2px);box-shadow:0 12px 30px rgba(37,211,102,.35);}
+  .btn-submit:disabled{opacity:.5;cursor:not-allowed;transform:none;}
+
+  /* Empty state */
+  .empty{
+    text-align:center;padding:60px 20px;color:var(--muted);
+  }
+  .empty h3{font-size:20px;margin-bottom:10px;color:var(--text);}
+
+  /* Footer */
+  footer{
+    border-top:1px solid var(--border);
+    padding:36px 24px 30px;margin-top:60px;
+    background:var(--bg2);text-align:center;
+  }
+  footer .footer-contact{
+    display:inline-flex;align-items:center;gap:10px;
+    padding:12px 24px;border-radius:10px;
+    background:#25d366;color:#fff;text-decoration:none;font-weight:700;
+    margin-bottom:20px;
+  }
+  footer p{color:var(--muted);font-size:13px;}
+
+  @media(max-width:600px){
+    .form-wrap{padding:26px 20px;}
+    .order-form{padding:24px 20px;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <nav>
+    <div class="logo">شحن الألعاب<small>أرخص سعر في مصر</small></div>
+  </nav>
+</header>
+
+<section class="hero">
+  <h1>شحن <span>فري فاير</span> و <span>ببجي موبايل</span></h1>
+  <p>اختار اللعبة، اختار الباقة، اكتب الـ ID بتاعك، وهنكمل الطلب على واتساب فوراً.</p>
+  <div class="hero-badges">
+    <span>شحن فوري</span>
+    <span>أرخص سعر</span>
+    <span>أمان تام</span>
+  </div>
+</section>
+
+<section id="order">
+  <div class="steps">
+    <div class="step active" id="step1">1. اختر اللعبة</div>
+    <div class="step" id="step2">2. اختر الباقة</div>
+    <div class="step" id="step3">3. ادخل الـ ID</div>
+  </div>
+
+  <!-- Step 1: Game selection -->
+  <div id="gameSelect">
+    <div class="section-title">
+      <h2>اختار <span>اللعبة</span></h2>
+    </div>
+    <div class="games">
+      <div class="game-card" data-game="freefire" onclick="selectGame('freefire')">
+        <div class="game-icon ff">FF</div>
+        <h3>فري فاير</h3>
+        <p>Free Fire Diamonds</p>
+      </div>
+      <div class="game-card" data-game="pubg" onclick="selectGame('pubg')">
+        <div class="game-icon pubg">PB</div>
+        <h3>ببجي موبايل</h3>
+        <p>PUBG Mobile UC</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Step 2: Packages -->
+  <div id="packagesSection" style="display:none;margin-top:50px;">
+    <div class="section-title">
+      <h2 id="packagesTitle">اختار <span>الباقة</span></h2>
+    </div>
+
+    <!-- Free Fire packages -->
+    <div class="game-panel" id="panel-freefire">
+      <h3 style="text-align:center;margin-bottom:20px;color:var(--ff);font-size:20px;">عروض المستوى الجديدة</h3>
+      <div class="packages-grid">
+        <div class="pkg" data-game="freefire" data-amount="120 جوهرة" data-price="35">
+          <div class="amount">120 <small>جوهرة</small></div>
+          <div class="price">35 <small>ج.م</small></div>
+        </div>
+        <div class="pkg" data-game="freefire" data-amount="200 جوهرة" data-price="40">
+          <div class="amount">200 <small>جوهرة</small></div>
+          <div class="price">40 <small>ج.م</small></div>
+        </div>
+        <div class="pkg" data-game="freefire" data-amount="350 جوهرة" data-price="60">
+          <div class="amount">350 <small>جوهرة</small></div>
+          <div class="price">60 <small>ج.م</small></div>
+        </div>
+        <div class="pkg" data-game="freefire" data-amount="1270 جوهرة (العرض الكامل)" data-price="255">
+          <div class="badge-best">أفضل عرض</div>
+          <div class="amount">1270 <small>جوهرة</small></div>
+          <div class="price">255 <small>ج.م</small></div>
+        </div>
+      </div>
+
+      <h3 style="text-align:center;margin:30px 0 20px;color:var(--ff);font-size:20px;">أسعار الشحن بالـ ID</h3>
+      <div class="packages-grid">
+        <div class="pkg" data-game="freefire" data-amount="100 جوهرة" data-price="55">
+          <div class="amount">100 <small>جوهرة</small></div>
+          <div class="price">55 <small>ج.م</small></div>
+        </div>
+        <div class="pkg" data-game="freefire" data-amount="210 جوهرة" data-price="110">
+          <div class="amount">210 <small>جوهرة</small></div>
+          <div class="price">110 <small>ج.م</small></div>
+        </div>
+        <div class="pkg" data-game="freefire" data-amount="310 جوهرة" data-price="160">
+          <div class="amount">310 <small>جوهرة</small></div>
+          <div class="price">160 <small>ج.م</small></div>
+        </div>
+        <div class="pkg" data-game="freefire" data-amount="530 جوهرة" data-price="260">
+          <div class="amount">530 <small>جوهرة</small></div>
+          <div class="price">260 <small>ج.م</small></div>
+        </div>
+        <div class="pkg" data-game="freefire" data-amount="1080 جوهرة" data-price="510">
+          <div class="amount">1080 <small>جوهرة</small></div>
+          <div class="price">510 <small>ج.م</small></div>
+        </div>
+        <div class="pkg" data-game="freefire" data-amount="2200 جوهرة" data-price="1020">
+          <div class="amount">2200 <small>جوهرة</small></div>
+          <div class="price">1020 <small>ج.م</small></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PUBG packages -->
+    <div class="game-panel" id="panel-pubg">
+      <div class="packages-grid">
+        <div class="pkg" data-game="pubg" data-amount="60 UC" data-price="50">
+          <div class="amount">60 <small>UC</small></div>
+          <div class="price">50 <small>ج.م</small></div>
+        </div>
+        <div class="pkg" data-game="pubg" data-amount="120 UC" data-price="100">
+          <div class="amount">120 <small>UC</small></div>
+          <div class="price">100 <small>ج.م</small></div>
+        </div>
+        <div class="pkg" data-game="pubg" data-amount="180 UC" data-price="150">
+          <div class="amount">180 <small>UC</small></div>
+          <div class="price">150 <small>ج.م</small></div>
+        </div>
+        <div class="pkg" data-game="pubg" data-amount="325 UC" data-price="225">
+          <div class="amount">325 <small>UC</small></div>
+          <div class="price">225 <small>ج.م</small></div>
+        </div>
+        <div class="pkg" data-game="pubg" data-amount="385 UC" data-price="275">
+          <div class="amount">385 <small>UC</small></div>
+          <div class="price">275 <small>ج.م</small></div>
+        </div>
+        <div class="pkg" data-game="pubg" data-amount="505 UC" data-price="375">
+          <div class="amount">505 <small>UC</small></div>
+          <div class="price">375 <small>ج.م</small></div>
+        </div>
+        <div class="pkg" data-game="pubg" data-amount="660 UC" data-price="450">
+          <div class="amount">660 <small>UC</small></div>
+          <div class="price">450 <small>ج.م</small></div>
+        </div>
+        <div class="pkg" data-game="pubg" data-amount="720 UC" data-price="500">
+          <div class="amount">720 <small>UC</small></div>
+          <div class="price">500 <small>ج.م</small></div>
+        </div>
+        <div class="pkg" data-game="pubg" data-amount="840 UC" data-price="600">
+          <div class="amount">840 <small>UC</small></div>
+          <div class="price">600 <small>ج.م</small></div>
+        </div>
+        <div class="pkg" data-game="pubg" data-amount="985 UC" data-price="675">
+          <div class="amount">985 <small>UC</small></div>
+          <div class="price">675 <small>ج.م</small></div>
+        </div>
+        <div class="pkg" data-game="pubg" data-amount="1320 UC" data-price="900">
+          <div class="amount">1320 <small>UC</small></div>
+          <div class="price">900 <small>ج.م</small></div>
+        </div>
+        <div class="pkg" data-game="pubg" data-amount="1440 UC" data-price="1000">
+          <div class="amount">1440 <small>UC</small></div>
+          <div class="price">1000 <small>ج.م</small></div>
+        </div>
+        <div class="pkg" data-game="pubg" data-amount="1800 UC" data-price="1125">
+          <div class="amount">1800 <small>UC</small></div>
+          <div class="price">1125 <small>ج.م</small></div>
+        </div>
+        <div class="pkg" data-game="pubg" data-amount="2125 UC" data-price="1350">
+          <div class="amount">2125 <small>UC</small></div>
+          <div class="price">1350 <small>ج.م</small></div>
+        </div>
+        <div class="pkg" data-game="pubg" data-amount="2460 UC" data-price="1575">
+          <div class="amount">2460 <small>UC</small></div>
+          <div class="price">1575 <small>ج.م</small></div>
+        </div>
+        <div class="pkg" data-game="pubg" data-amount="3120 UC" data-price="2025">
+          <div class="amount">3120 <small>UC</small></div>
+          <div class="price">2025 <small>ج.م</small></div>
+        </div>
+        <div class="pkg" data-game="pubg" data-amount="3850 UC" data-price="2200">
+          <div class="amount">3850 <small>UC</small></div>
+          <div class="price">2200 <small>ج.م</small></div>
+        </div>
+        <div class="pkg" data-game="pubg" data-amount="5650 UC" data-price="3325">
+          <div class="amount">5650 <small>UC</small></div>
+          <div class="price">3325 <small>ج.م</small></div>
+        </div>
+        <div class="pkg" data-game="pubg" data-amount="8100 UC" data-price="4350">
+          <div class="amount">8100 <small>UC</small></div>
+          <div class="price">4350 <small>ج.م</small></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Step 3: ID Form -->
+  <div id="orderSection" style="display:none;margin-top:50px;">
+    <div class="section-title">
+      <h2>ادخل <span>الـ ID</span> بتاعك</h2>
+    </div>
+
+    <div class="order-form">
+      <div class="summary">
+        <div class="summary-row">
+          <span>اللعبة</span>
+          <span id="sumGame">-</span>
+        </div>
+        <div class="summary-row">
+          <span>الباقة</span>
+          <span id="sumAmount">-</span>
+        </div>
+        <div class="summary-row total">
+          <span>الإجمالي</span>
+          <span id="sumPrice">-</span>
+        </div>
+      </div>
+
+      <form id="idForm" novalidate>
+        <div class="form-group">
+          <label for="playerId">الـ ID في اللعبة <span class="req">*</span></label>
+          <input type="text" id="playerId" required placeholder="مثال: 123456789" maxlength="20" inputmode="numeric" />
+          <div class="hint">اكتب رقم الـ ID بالظبط زي ما هو ظاهر في اللعبة.</div>
+          <div class="error-text" id="idError">الرجاء إدخال ID صحيح (6 أرقام على الأقل).</div>
+        </div>
+
+        <div class="form-group">
+          <label for="playerName">اسمك في اللعبة (اختياري)</label>
+          <input type="text" id="playerName" placeholder="اسم الشخصية في اللعبة" maxlength="40" />
+        </div>
+
+        <button type="submit" class="btn-submit">
+          إتمام الطلب على واتساب
+        </button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <a href="https://wa.me/201283968315" class="footer-contact" target="_blank">
+    تواصل واتساب: 01283968315
+  </a>
+  <p>© <span id="year"></span> جميع الحقوق محفوظة | أرخص سعر في مصر</p>
+</footer>
+
+<script>
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  /* ==============================
+     الإعدادات
+     ============================== */
+  const WHATSAPP_NUMBER = '201283968315'; // الرقم بصيغة دولية بدون +
+
+  /* ==============================
+     الحالة
+     ============================== */
+  const state = {
+    game: null,
+    amount: null,
+    price: null
+  };
+
+  /* ==============================
+     إخفاء/إظهار الأقسام
+     ============================== */
+  const step1 = document.getElementById('step1');
+  const step2 = document.getElementById('step2');
+  const step3 = document.getElementById('step3');
+
+  function updateSteps(active){
+    [step1, step2, step3].forEach((el, i) => {
+      el.classList.remove('active', 'done');
+      if (i + 1 < active) el.classList.add('done');
+      if (i + 1 === active) el.classList.add('active');
+    });
+  }
+
+  /* ==============================
+     1. اختيار اللعبة
+     ============================== */
+  function selectGame(game){
+    state.game = game;
+
+    // إزالة التحديد من كل الكروت
+    document.querySelectorAll('.game-card').forEach(c => c.classList.remove('selected'));
+    document.querySelector(`.game-card[data-game="${game}"]`).classList.add('selected');
+
+    // إظهار قسم الباقات
+    document.getElementById('packagesSection').style.display = 'block';
+
+    // إخفاء الباقات التانية
+    document.querySelectorAll('.game-panel').forEach(p => p.classList.remove('active'));
+    document.getElementById(`panel-${game}`).classList.add('active');
+
+    // تحديث العنوان
+    document.getElementById('packagesTitle').innerHTML =
+      game === 'freefire'
+        ? 'باقات <span>فري فاير</span>'
+        : 'باقات <span>ببجي موبايل</span>';
+
+    // إخفاء قسم الـ ID لحد ما يختار باقة
+    document.getElementById('orderSection').style.display = 'none';
+
+    // scroll للباقات
+    setTimeout(() => {
+      document.getElementById('packagesSection').scrollIntoView({behavior:'smooth', block:'start'});
+    }, 100);
+
+    updateSteps(2);
+  }
+
+  /* ==============================
+     2. اختيار الباقة
+     ============================== */
+  document.querySelectorAll('.pkg').forEach(pkg => {
+    pkg.addEventListener('click', function(){
+      // إزالة التحديد من كل الباقات في نفس اللعبة
+      document.querySelectorAll(`.pkg[data-game="${state.game}"]`).forEach(p => p.classList.remove('selected'));
+      this.classList.add('selected');
+
+      state.amount = this.dataset.amount;
+      state.price = this.dataset.price;
+
+      // تحديث الملخص
+      document.getElementById('sumGame').textContent =
+        state.game === 'freefire' ? 'فري فاير' : 'ببجي موبايل';
+      document.getElementById('sumAmount').textContent = state.amount;
+      document.getElementById('sumPrice').textContent = state.price + ' ج.م';
+
+      // إظهار قسم الـ ID
+      document.getElementById('orderSection').style.display = 'block';
+
+      setTimeout(() => {
+        document.getElementById('orderSection').scrollIntoView({behavior:'smooth', block:'start'});
+      }, 100);
+
+      updateSteps(3);
+    });
+  });
+
+  /* ==============================
+     3. إرسال الطلب لواتساب
+     ============================== */
+  const playerIdInput = document.getElementById('playerId');
+  const playerNameInput = document.getElementById('playerName');
+  const idError = document.getElementById('idError');
+
+  playerIdInput.addEventListener('input', () => {
+    playerIdInput.value = playerIdInput.value.replace(/[^\d]/g, '');
+    const ok = playerIdInput.value.length >= 6;
+    playerIdInput.classList.toggle('invalid', !ok && playerIdInput.value.length > 0);
+    idError.classList.toggle('show', !ok && playerIdInput.value.length > 0);
+  });
+
+  document.getElementById('idForm').addEventListener('submit', function(e){
+    e.preventDefault();
+
+    const playerId = playerIdInput.value.trim();
+    const playerName = playerNameInput.value.trim();
+
+    // تحقق من الـ ID
+    if (playerId.length < 6){
+      playerIdInput.classList.add('invalid');
+      idError.classList.add('show');
+      playerIdInput.focus();
+      return;
+    }
+
+    if (!state.game || !state.amount || !state.price){
+      alert('من فضلك اختار اللعبة والباقة الأول.');
+      return;
+    }
+
+    // بناء رسالة الواتساب
+    const gameName = state.game === 'freefire' ? 'فري فاير' : 'ببجي موبايل';
+
+    let message =
+      'مرحباً، عايز أشحن الحساب:\n\n' +
+      'اللعبة: ' + gameName + '\n' +
+      'الباقة: ' + state.amount + '\n' +
+      'السعر: ' + state.price + ' ج.م\n' +
+      'الـ ID: ' + playerId + '\n';
+
+    if (playerName){
+      message += 'اسم اللاعب: ' + playerName + '\n';
+    }
+
+    message += '\nمن فضلك أكد الطلب.';
+
+    const url = 'https://wa.me/' + WHATSAPP_NUMBER + '?text=' + encodeURIComponent(message);
+
+    // فتح واتساب
+    window.open(url, '_blank');
+  });
+</script>
+
+</body>
+</html>
