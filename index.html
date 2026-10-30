@@ -1,0 +1,909 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>يوسف روسي | تصميم مواقع بالذكاء الاصطناعي</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;900&family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #070812;
+    --bg-soft: #0d1020;
+    --glass: rgba(255,255,255,0.04);
+    --glass-strong: rgba(255,255,255,0.07);
+    --border: rgba(255,255,255,0.08);
+    --border-strong: rgba(255,255,255,0.15);
+    --primary: #7c5cff;
+    --primary-2: #00e5ff;
+    --accent: #ff4ecd;
+    --text: #eef1ff;
+    --muted: #8b91b5;
+    --success: #22d3a7;
+    --danger: #ff5577;
+    --radius: 20px;
+    --shadow-glow: 0 0 60px rgba(124,92,255,0.35);
+  }
+
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+
+  body{
+    font-family:'Tajawal', 'Cairo', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.8;
+    overflow-x: hidden;
+    min-height: 100vh;
+    position: relative;
+  }
+
+  /* ====== خلفية متحركة ====== */
+  .aurora{
+    position: fixed;
+    inset: 0;
+    z-index: -2;
+    overflow: hidden;
+    pointer-events: none;
+  }
+  .aurora::before,
+  .aurora::after,
+  .aurora .blob3{
+    content:'';
+    position: absolute;
+    width: 700px;
+    height: 700px;
+    border-radius: 50%;
+    filter: blur(140px);
+    opacity: 0.45;
+    animation: float 18s ease-in-out infinite;
+  }
+  .aurora::before{
+    background: radial-gradient(circle, #7c5cff, transparent 70%);
+    top: -250px;
+    right: -200px;
+  }
+  .aurora::after{
+    background: radial-gradient(circle, #00e5ff, transparent 70%);
+    bottom: -300px;
+    left: -250px;
+    animation-delay: -6s;
+  }
+  .aurora .blob3{
+    background: radial-gradient(circle, #ff4ecd, transparent 70%);
+    top: 40%;
+    left: 40%;
+    width: 500px;
+    height: 500px;
+    opacity: 0.25;
+    animation-delay: -12s;
+  }
+  @keyframes float{
+    0%,100%{transform: translate(0,0) scale(1);}
+    33%{transform: translate(60px,-40px) scale(1.1);}
+    66%{transform: translate(-40px,60px) scale(0.95);}
+  }
+
+  /* شبكة نقطية خفيفة */
+  .grid-overlay{
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    background-image:
+      linear-gradient(rgba(124,92,255,0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(124,92,255,0.05) 1px, transparent 1px);
+    background-size: 50px 50px;
+    mask-image: radial-gradient(ellipse at center, black 40%, transparent 80%);
+    -webkit-mask-image: radial-gradient(ellipse at center, black 40%, transparent 80%);
+    pointer-events: none;
+  }
+
+  /* ====== الهيدر ====== */
+  header{
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(7,8,18,0.65);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border-bottom: 1px solid var(--border);
+  }
+  nav{
+    max-width: 1200px;
+    margin: auto;
+    padding: 18px 28px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .logo{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 22px;
+    font-weight: 900;
+    font-family:'Cairo',sans-serif;
+  }
+  .logo-mark{
+    width: 38px; height: 38px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, var(--primary), var(--primary-2));
+    display: grid;
+    place-items: center;
+    font-size: 18px;
+    color: #070812;
+    box-shadow: 0 0 20px rgba(124,92,255,0.5);
+  }
+  .logo-text{
+    background: linear-gradient(90deg, #fff, #b9b5ff);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  nav ul{
+    display: flex;
+    gap: 8px;
+    list-style: none;
+  }
+  nav a{
+    color: var(--muted);
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 15px;
+    padding: 8px 16px;
+    border-radius: 10px;
+    transition: .25s;
+  }
+  nav a:hover{
+    color: var(--text);
+    background: var(--glass);
+  }
+
+  /* ====== الأزرار ====== */
+  .btn{
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 14px 32px;
+    border-radius: 14px;
+    font-weight: 700;
+    text-decoration: none;
+    cursor: pointer;
+    border: none;
+    transition: .3s cubic-bezier(.4,0,.2,1);
+    font-family: inherit;
+    font-size: 15px;
+    position: relative;
+    overflow: hidden;
+  }
+  .btn-primary{
+    background: linear-gradient(135deg, var(--primary), var(--accent));
+    color: #fff;
+    box-shadow: 0 8px 30px rgba(124,92,255,0.4);
+  }
+  .btn-primary::before{
+    content:'';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, var(--accent), var(--primary-2));
+    opacity: 0;
+    transition: .3s;
+  }
+  .btn-primary:hover::before{opacity: 1;}
+  .btn-primary span{position: relative; z-index: 1;}
+  .btn-primary:hover{
+    transform: translateY(-3px);
+    box-shadow: 0 15px 40px rgba(255,78,205,0.5);
+  }
+  .btn-primary:disabled{
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  .btn-ghost{
+    background: var(--glass);
+    color: var(--text);
+    border: 1px solid var(--border-strong);
+  }
+  .btn-ghost:hover{
+    background: var(--glass-strong);
+    border-color: var(--primary);
+  }
+
+  /* ====== الهيرو ====== */
+  .hero{
+    max-width: 1200px;
+    margin: auto;
+    padding: 100px 28px 80px;
+    text-align: center;
+    position: relative;
+  }
+  .badge{
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 20px;
+    border-radius: 100px;
+    background: var(--glass);
+    border: 1px solid var(--border-strong);
+    color: var(--text);
+    font-size: 13px;
+    font-weight: 500;
+    margin-bottom: 28px;
+    backdrop-filter: blur(10px);
+  }
+  .badge .dot{
+    width: 8px;height: 8px;
+    border-radius: 50%;
+    background: var(--success);
+    box-shadow: 0 0 12px var(--success);
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse{
+    0%,100%{opacity:1;transform:scale(1);}
+    50%{opacity:.6;transform:scale(1.3);}
+  }
+
+  .hero h1{
+    font-family:'Cairo',sans-serif;
+    font-size: clamp(36px, 6vw, 72px);
+    font-weight: 900;
+    line-height: 1.15;
+    margin-bottom: 24px;
+    letter-spacing: -0.02em;
+  }
+  .hero h1 .gradient{
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-2) 50%, var(--accent) 100%);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: shine 4s linear infinite;
+  }
+  @keyframes shine{
+    to{background-position: 200% center;}
+  }
+  .hero p{
+    color: var(--muted);
+    font-size: 18px;
+    max-width: 620px;
+    margin: 0 auto 40px;
+  }
+  .hero-btns{
+    display: flex;
+    gap: 14px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  /* إحصائيات مصغرة */
+  .stats{
+    display: flex;
+    gap: 40px;
+    justify-content: center;
+    margin-top: 70px;
+    flex-wrap: wrap;
+  }
+  .stat{
+    text-align: center;
+  }
+  .stat-num{
+    font-family:'Cairo',sans-serif;
+    font-size: 32px;
+    font-weight: 900;
+    background: linear-gradient(135deg, var(--primary-2), var(--accent));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .stat-label{
+    color: var(--muted);
+    font-size: 13px;
+    margin-top: 4px;
+  }
+
+  /* ====== الأقسام ====== */
+  section{
+    max-width: 1200px;
+    margin: auto;
+    padding: 90px 28px;
+    position: relative;
+  }
+  .section-head{
+    text-align: center;
+    margin-bottom: 60px;
+  }
+  .section-tag{
+    display: inline-block;
+    color: var(--primary-2);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  .section-head h2{
+    font-family:'Cairo',sans-serif;
+    font-size: clamp(28px, 4.5vw, 44px);
+    font-weight: 900;
+    margin-bottom: 14px;
+    line-height: 1.25;
+  }
+  .section-head h2 .accent{
+    background: linear-gradient(90deg, var(--primary-2), var(--accent));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .section-head p{
+    color: var(--muted);
+    font-size: 16px;
+  }
+
+  /* ====== كروت الخدمات ====== */
+  .services-grid{
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 24px;
+  }
+  .service-card{
+    background: var(--glass);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 36px 28px;
+    transition: .4s cubic-bezier(.4,0,.2,1);
+    position: relative;
+    overflow: hidden;
+    backdrop-filter: blur(10px);
+  }
+  .service-card::before{
+    content:'';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--primary), transparent);
+    opacity: 0;
+    transition: .4s;
+  }
+  .service-card:hover{
+    transform: translateY(-8px);
+    border-color: rgba(124,92,255,0.4);
+    background: var(--glass-strong);
+    box-shadow: 0 20px 60px rgba(124,92,255,0.2);
+  }
+  .service-card:hover::before{opacity: 1;}
+  .service-icon{
+    width: 56px; height: 56px;
+    border-radius: 16px;
+    background: linear-gradient(135deg, rgba(124,92,255,0.2), rgba(255,78,205,0.2));
+    display: grid;
+    place-items: center;
+    font-size: 26px;
+    margin-bottom: 22px;
+    border: 1px solid rgba(124,92,255,0.3);
+  }
+  .service-card h3{
+    font-family:'Cairo',sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 12px;
+  }
+  .service-card p{
+    color: var(--muted);
+    font-size: 14.5px;
+    line-height: 1.8;
+  }
+
+  /* ====== الملاحظات ====== */
+  .notes{
+    display: grid;
+    gap: 20px;
+    max-width: 900px;
+    margin: auto;
+  }
+  .note{
+    background: linear-gradient(135deg, rgba(124,92,255,0.08), rgba(0,229,255,0.05));
+    border: 1px solid rgba(124,92,255,0.25);
+    border-radius: var(--radius);
+    padding: 28px 32px;
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+    position: relative;
+    overflow: hidden;
+  }
+  .note::after{
+    content:'';
+    position: absolute;
+    top: 0; right: 0;
+    width: 4px; height: 100%;
+    background: linear-gradient(180deg, var(--primary), var(--accent));
+  }
+  .note-icon{
+    flex-shrink: 0;
+    width: 42px; height: 42px;
+    border-radius: 12px;
+    background: rgba(124,92,255,0.2);
+    display: grid;
+    place-items: center;
+    font-size: 20px;
+  }
+  .note-content p{
+    font-size: 15px;
+    color: var(--text);
+    line-height: 1.9;
+  }
+  .note-content strong{
+    color: var(--primary-2);
+    font-weight: 700;
+  }
+  .note-content em{
+    color: var(--muted);
+    font-style: normal;
+    font-size: 13px;
+  }
+
+  /* ====== الفورم ====== */
+  .form-wrap{
+    max-width: 800px;
+    margin: auto;
+    background: var(--glass);
+    border: 1px solid var(--border-strong);
+    border-radius: 24px;
+    padding: 44px;
+    backdrop-filter: blur(20px);
+    position: relative;
+    overflow: hidden;
+  }
+  .form-wrap::before{
+    content:'';
+    position: absolute;
+    top: -50%; left: -50%;
+    width: 200%; height: 200%;
+    background: conic-gradient(from 0deg, transparent, rgba(124,92,255,0.15), transparent, rgba(255,78,205,0.15), transparent);
+    animation: rotate 20s linear infinite;
+    z-index: -1;
+  }
+  @keyframes rotate{
+    to{transform: rotate(360deg);}
+  }
+
+  .form-row{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+  .form-group{
+    margin-bottom: 22px;
+  }
+  .form-group label{
+    display: block;
+    margin-bottom: 10px;
+    font-weight: 500;
+    font-size: 14.5px;
+    color: var(--text);
+  }
+  .form-group label .req{
+    color: var(--accent);
+    margin-right: 2px;
+  }
+  .form-group input,
+  .form-group textarea{
+    width: 100%;
+    padding: 15px 18px;
+    border-radius: 12px;
+    background: rgba(7,8,18,0.6);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: inherit;
+    font-size: 15px;
+    transition: .3s;
+  }
+  .form-group input:focus,
+  .form-group textarea:focus{
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 4px rgba(124,92,255,0.15);
+    background: rgba(7,8,18,0.9);
+  }
+  .form-group input.invalid,
+  .form-group textarea.invalid{
+    border-color: var(--danger);
+    box-shadow: 0 0 0 4px rgba(255,85,119,0.15);
+  }
+  .form-group input.valid,
+  .form-group textarea.valid{
+    border-color: var(--success);
+  }
+  .form-group textarea{
+    resize: vertical;
+    min-height: 150px;
+    line-height: 1.8;
+  }
+
+  .hint{
+    font-size: 12.5px;
+    color: var(--muted);
+    margin-top: 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .error-text{
+    font-size: 12.5px;
+    color: var(--danger);
+    margin-top: 8px;
+    display: none;
+    align-items: center;
+    gap: 6px;
+  }
+  .error-text.show{display: flex;}
+
+  .form-message{
+    display: none;
+    padding: 14px 18px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+    font-weight: 500;
+    font-size: 14px;
+  }
+  .form-message.error{
+    display: block;
+    background: rgba(255,85,119,0.12);
+    border: 1px solid rgba(255,85,119,0.4);
+    color: #ff8899;
+  }
+
+  /* ====== الفوتر ====== */
+  footer{
+    border-top: 1px solid var(--border);
+    padding: 60px 28px 40px;
+    margin-top: 60px;
+    text-align: center;
+    position: relative;
+  }
+  .footer-inner{
+    max-width: 1200px;
+    margin: auto;
+  }
+  .footer-logo{
+    font-family:'Cairo',sans-serif;
+    font-size: 22px;
+    font-weight: 900;
+    background: linear-gradient(90deg, var(--primary-2), var(--accent));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    margin-bottom: 12px;
+  }
+  .footer-small{
+    color: var(--muted);
+    font-size: 13px;
+    line-height: 2;
+  }
+
+  @media(max-width: 768px){
+    nav ul{display: none;}
+    .form-row{grid-template-columns: 1fr;}
+    .form-wrap{padding: 28px 22px;}
+    .hero{padding: 70px 20px 50px;}
+    .note{flex-direction: column; gap: 12px;}
+    .stats{gap: 30px;}
+    section{padding: 60px 20px;}
+  }
+</style>
+</head>
+<body>
+
+<!-- خلفية -->
+<div class="aurora"><div class="blob3"></div></div>
+<div class="grid-overlay"></div>
+
+<!-- الهيدر -->
+<header>
+  <nav>
+    <div class="logo">
+      <div class="logo-mark">✦</div>
+      <span class="logo-text">يوسف روسي</span>
+    </div>
+    <ul>
+      <li><a href="#services">الخدمات</a></li>
+      <li><a href="#notes">ملاحظات</a></li>
+      <li><a href="#order">اطلب موقعك</a></li>
+    </ul>
+    <a href="#order" class="btn btn-primary"><span>اطلب موقعك</span></a>
+  </nav>
+</header>
+
+<!-- الهيرو -->
+<section class="hero">
+  <div class="badge">
+    <span class="dot"></span>
+    <span>مُنشأ بالذكاء الاصطناعي</span>
+  </div>
+  <h1>
+    أنا <span class="gradient">يوسف (روسي)</span><br>
+    أصمّم لك موقعك<br>
+    <span class="gradient">بالذكاء الاصطناعي</span>
+  </h1>
+  <p>
+    كل اللي عليك تقوله مواصفات موقعك، وأنا أبدأ أنفّذها كموقع حقيقي جاهز للانطلاق.
+  </p>
+  <div class="hero-btns">
+    <a href="#order" class="btn btn-primary"><span>🚀 ابدأ طلبك الآن</span></a>
+    <a href="#services" class="btn btn-ghost">استكشف الخدمات</a>
+  </div>
+
+  <div class="stats">
+    <div class="stat">
+      <div class="stat-num">+50</div>
+      <div class="stat-label">موقع تم تنفيذه</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">24س</div>
+      <div class="stat-label">متوسط وقت الرد</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">100%</div>
+      <div class="stat-label">تخصيص كامل</div>
+    </div>
+  </div>
+</section>
+
+<!-- الخدمات -->
+<section id="services">
+  <div class="section-head">
+    <span class="section-tag">Services</span>
+    <h2>الخدمات اللي <span class="accent">أقدّمها</span></h2>
+    <p>مواقع احترافية بمواصفاتك أنت</p>
+  </div>
+  <div class="services-grid">
+    <div class="service-card">
+      <div class="service-icon">🛒</div>
+      <h3>مواقع المتاجر</h3>
+      <p>متجر إلكتروني كامل يعرض منتجاتك ويستقبل طلباتك، مصمّم حسب نشاطك التجاري.</p>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">🎯</div>
+      <h3>مواقع الأونلاين كوتش</h3>
+      <p>موقع شخصي لك كمدرب أونلاين، يعرض خدماتك ويستقبل حجوزات العملاء.</p>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">📄</div>
+      <h3>مواقع متعددة الصفحات</h3>
+      <p>موقع كامل بصفحات متعددة: من نحن، خدماتنا، أعمالنا، تواصل معنا، وغيرها.</p>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">⚡</div>
+      <h3>تسليم سريع</h3>
+      <p>أبدأ التنفيذ بمجرد أن تقول لي مواصفات موقعك، وتستلمه جاهزاً خلال وقت قصير.</p>
+    </div>
+  </div>
+</section>
+
+<!-- الملاحظات -->
+<section id="notes" style="padding-top: 40px;">
+  <div class="section-head">
+    <span class="section-tag">Notes</span>
+    <h2>قبل ما <span class="accent">تبدأ</span></h2>
+    <p>اقرأ الملاحظات دي كويس</p>
+  </div>
+  <div class="notes">
+    <div class="note">
+      <div class="note-icon">💡</div>
+      <div class="note-content">
+        <p>
+          <strong>ملاحظة هامة:</strong> أنا أستخدم الذكاء الاصطناعي في جميع المشاريع.
+          بناء خلايا وصفات الموقع بيتم عن طريق الذكاء الاصطناعي، وأما بناء الموقع وتفعيله
+          فيتم عن طريقي أنا. <em>(اللي أنت بتقرأ منه دلوقتي ده معمول بالذكاء الاصطناعي)</em>
+        </p>
+      </div>
+    </div>
+    <div class="note" style="border-color: rgba(0,229,255,0.25); background: linear-gradient(135deg, rgba(0,229,255,0.08), rgba(124,92,255,0.05));">
+      <div class="note-icon" style="background: rgba(0,229,255,0.15);">📦</div>
+      <div class="note-content">
+        <p>
+          <strong>ملاحظة (2):</strong> تقدر تاخد ملف الموقع وترفعه بنفسك، وأنا هكون معاك خطوة بخطوة.
+          وتقدر كمان تاخد مني لينك الموقع جاهز ومحطوط في جميع خدماتك للتواصل (حسب نوع موقعك).
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- الفورم -->
+<section id="order">
+  <div class="section-head">
+    <span class="section-tag">Get Started</span>
+    <h2>قولي <span class="accent">مواصفات موقعك</span></h2>
+    <p>املأ البيانات وسيصلك ردّي في أقرب وقت</p>
+  </div>
+
+  <div class="form-wrap">
+    <div id="formMessage" class="form-message"></div>
+
+    <form id="orderForm" novalidate>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="name">الاسم <span class="req">*</span></label>
+          <input type="text" id="name" required placeholder="اسمك الكامل" maxlength="60" />
+          <div class="error-text" id="nameError">⚠️ من فضلك اكتب اسمك (حرفين على الأقل).</div>
+        </div>
+        <div class="form-group">
+          <label for="phone">رقم الهاتف المصري (واتساب) <span class="req">*</span></label>
+          <input type="tel" id="phone" required placeholder="مثال: 01012345678" maxlength="15" inputmode="tel" />
+          <div class="hint">📱 يبدأ بـ 010 / 011 / 012 / 015 (11 رقم).</div>
+          <div class="error-text" id="phoneError">⚠️ رقم الهاتف غير صحيح. لازم يكون رقم مصري صحيح.</div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="details">مواصفات الموقع (اشرح لي تفاصيل موقعك) <span class="req">*</span></label>
+        <textarea id="details" required placeholder="اكتب هنا مواصفات موقعك بالتفصيل: نوع الموقع، الأقسام، الألوان المفضلة، المحتوى، الميزات المطلوبة، إلخ..." maxlength="2000"></textarea>
+        <div class="error-text" id="detailsError">⚠️ من فضلك اكتب مواصفات موقعك (20 حرف على الأقل) بدون كلمات غير لائقة.</div>
+      </div>
+
+      <button type="submit" class="btn btn-primary" style="width:100%;font-size:16px;padding:16px;">
+        <span>إرسال المتطلبات ✨</span>
+      </button>
+    </form>
+  </div>
+</section>
+
+<!-- الفوتر -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-logo">يوسف روسي</div>
+    <p class="footer-small">
+      © <span id="year"></span> يوسف (روسي) — جميع الحقوق محفوظة.<br>
+      صُمم هذا الموقع باستخدام الذكاء الاصطناعي ✨
+    </p>
+  </div>
+</footer>
+
+<script>
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  /* ============================================================
+     الإعدادات
+     ============================================================ */
+  const CONFIG = {
+    BOT_TOKEN: '8982312522:AAF1Ax7TmVpa7w1Owg1PbO8Ks6gGTXz6gNM',
+    CHAT_ID:   '8686727924'
+  };
+
+  /* ============================================================
+     التحقق من رقم الهاتف المصري
+     ============================================================ */
+  function isValidEgyptianPhone(input){
+    let p = input.trim().replace(/[\s\-\(\)]/g, '');
+    if (p.startsWith('+20'))      p = '0' + p.slice(3);
+    else if (p.startsWith('0020')) p = '0' + p.slice(4);
+    else if (p.startsWith('20') && p.length === 12) p = '0' + p.slice(2);
+    return /^01[0125][0-9]{8}$/.test(p);
+  }
+
+  /* ============================================================
+     فلتر الكلمات غير اللائقة
+     ============================================================ */
+  const BANNED_WORDS = [
+    'sex','sexy','porn','porno','xxx','nude','naked','hentai','adult',
+    'سكس','سيكس','عاهرة','شرموطة','شرموطه','قحبة','قحبه','نيك','منيك',
+    'زب','كسم','كس','طيز','طيزك','عير','زبر','شهواني','شهوانية',
+    'إباحي','اباحي','إباحية','اباحية','جنسي','جنسية','خلاعة','خلاعه',
+    'دعارة','دعاره','بورن','فاحش','فاحشة','فاحشه','مومس','بغاء'
+  ];
+
+  function containsBannedWords(text){
+    const lower = text.toLowerCase();
+    return BANNED_WORDS.some(w => {
+      const word = w.toLowerCase();
+      if (/^[a-z]{2,4}$/.test(word)) {
+        const re = new RegExp('(^|[^a-z])' + word + '([^a-z]|$)', 'i');
+        return re.test(lower);
+      }
+      return lower.includes(word);
+    });
+  }
+
+  /* ============================================================
+     عناصر التحقق
+     ============================================================ */
+  const nameInput    = document.getElementById('name');
+  const phoneInput   = document.getElementById('phone');
+  const detailsInput = document.getElementById('details');
+
+  const nameError    = document.getElementById('nameError');
+  const phoneError   = document.getElementById('phoneError');
+  const detailsError = document.getElementById('detailsError');
+
+  function setError(input, errorEl, show, isValid){
+    input.classList.remove('valid','invalid');
+    errorEl.classList.remove('show');
+    if (show){
+      input.classList.add('invalid');
+      errorEl.classList.add('show');
+    } else if (isValid){
+      input.classList.add('valid');
+    }
+  }
+
+  nameInput.addEventListener('input', () => {
+    const ok = nameInput.value.trim().length >= 2;
+    setError(nameInput, nameError, !ok && nameInput.value.length > 0, ok);
+  });
+
+  phoneInput.addEventListener('input', () => {
+    phoneInput.value = phoneInput.value.replace(/[^\d\+\s\-\(\)]/g, '');
+    const ok = isValidEgyptianPhone(phoneInput.value);
+    setError(phoneInput, phoneError, !ok && phoneInput.value.length > 0, ok);
+  });
+
+  detailsInput.addEventListener('input', () => {
+    const v = detailsInput.value.trim();
+    const ok = v.length >= 20 && !containsBannedWords(v);
+    const bad = v.length < 20 || containsBannedWords(v);
+    setError(detailsInput, detailsError, bad && detailsInput.value.length > 0, ok);
+  });
+
+  /* ============================================================
+     إرسال الطلب
+     ============================================================ */
+  document.getElementById('orderForm').addEventListener('submit', async function(e){
+    e.preventDefault();
+
+    const msgBox = document.getElementById('formMessage');
+    msgBox.className = 'form-message';
+    msgBox.textContent = '';
+
+    const name    = nameInput.value.trim();
+    const phone   = phoneInput.value.trim();
+    const details = detailsInput.value.trim();
+
+    let hasError = false;
+
+    if (name.length < 2){
+      setError(nameInput, nameError, true, false);
+      hasError = true;
+    } else {
+      setError(nameInput, nameError, false, true);
+    }
+
+    if (!isValidEgyptianPhone(phone)){
+      setError(phoneInput, phoneError, true, false);
+      hasError = true;
+    } else {
+      setError(phoneInput, phoneError, false, true);
+    }
+
+    if (details.length < 20 || containsBannedWords(details)){
+      setError(detailsInput, detailsError, true, false);
+      hasError = true;
+    } else {
+      setError(detailsInput, detailsError, false, true);
+    }
+
+    if (hasError){
+      msgBox.className = 'form-message error';
+      msgBox.textContent = '⚠️ من فضلك راجع البيانات المطلوبة بالأعلى.';
+      msgBox.scrollIntoView({behavior:'smooth', block:'center'});
+      return;
+    }
+
+    const text =
+      '✨ طلب موقع جديد\n' +
+      '━━━━━━━━━━━━━━━━\n' +
+      '👤 الاسم: ' + name + '\n' +
+      '📱 رقم الواتساب: ' + phone + '\n' +
+      '━━━━━━━━━━━━━━━━\n' +
+      '📝 المواصفات:\n' + details + '\n' +
+      '━━━━━━━━━━━━━━━━\n' +
+      '🕒 التاريخ: ' + new Date().toLocaleString('ar-EG');
+
+    const btn = this.querySelector('button[type="submit"]');
+    const originalText = btn.innerHTML;
+    btn.disabled = true;
+    btn.innerHTML = '<span>جاري الإرسال...</span>';
