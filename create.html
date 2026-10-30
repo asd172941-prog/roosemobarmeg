@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إنشاء موقعك | يوسف روسي</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="bg-grid"></div>
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+
+    <nav>
+        <div class="nav-brand">YR<span>.</span></div>
+        <div class="nav-links">
+            <a href="index.html">الرئيسية</a>
+            <a href="create.html" class="active">إنشاء الموقع</a>
+            <a href="portfolio.html">أعمالنا</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="hero form-hero">
+            <div class="badge">✦ خطوة واحدة تفصلك عن موقعك</div>
+            <h1 class="form-title">إنشاء <span class="gradient-text">موقعك</span></h1>
+            <p class="subtitle">املأ البيانات وهنوصلك على واتساب فوراً</p>
+
+            <form id="orderForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>👤 اسمك الشخصي *</label>
+                        <input type="text" id="personalName" placeholder="اكتب اسمك" required>
+                        <div class="error-msg" id="nameError">الاسم غير صالح أو يحتوي على ألفاظ غير لائقة</div>
+                    </div>
+                    <div class="form-group">
+                        <label>🌐 اسم الموقع *</label>
+                        <input type="text" id="siteName" placeholder="اكتب اسم الموقع" required>
+                        <div class="error-msg" id="siteNameError">اسم الموقع غير صالح</div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>📂 نوع الموقع *</label>
+                    <select id="siteType" required>
+                        <option value="">— اختر النوع —</option>
+                        <option value="متجر إلكتروني">🛒 متجر إلكتروني</option>
+                        <option value="أونلاين كوتش">🎯 أونلاين كوتش</option>
+                        <option value="موقع شخصي / بورتفوليو">💼 موقع شخصي / بورتفوليو</option>
+                        <option value="موقع شركة">🏢 موقع شركة</option>
+                        <option value="مدونة">📝 مدونة</option>
+                        <option value="أخرى">✨ أخرى</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>📝 وصف الموقع *</label>
+                    <textarea id="siteDesc" placeholder="وصف مختصر للموقع اللي عايزه (10 أحرف على الأقل)..." required></textarea>
+                    <div class="error-msg" id="descError">الوصف يحتوي على ألفاظ غير لائقة أو قصير جداً</div>
+                </div>
+
+                <div class="form-group">
+                    <label>📱 رقم واتساب (مصري) *</label>
+                    <input type="tel" id="whatsapp" placeholder="مثال: 01012345678" maxlength="11" required>
+                    <div class="error-msg" id="phoneError">لازم رقم مصري صحيح (11 رقم يبدأ بـ 010/011/012/015)</div>
+                </div>
+
+                <button type="submit" class="btn btn-glow" style="width:100%;">
+                    <span>✨ إرسال الطلب</span>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal-overlay" id="successModal">
+        <div class="modal-box">
+            <div class="success-icon">✓</div>
+            <h3>تم الإرسال بنجاح!</h3>
+            <p>سيتم التواصل معك على رقم الواتساب اللي أدخلته في أقرب وقت 🚀</p>
+            <button class="btn btn-glow" onclick="closeModal()">حسناً</button>
+        </div>
+    </div>
+
+    <footer>
+        <p>© 2025 يوسف روسي</p>
+    </footer>
+
+    <script>
+        const BOT_TOKEN = '9255628207:AAF_lLyqnzn_R3Vg_r37YYQiuflkir3YuL0';
+        const CHAT_ID = '8686727924';
+
+        const BAD_WORDS = [
+            'كس','كسم','كسمك','شرموط','شرموطة','عرص','خول','لبوة','قحبة',
+            'زبي','طيز','بزاز','نيك','منيك','متناك','انيك','ينيك',
+            'fuck','shit','bitch','ass','dick','pussy','cunt','whore',
+            'sex','porn','xxx','nude','naked','slut','bastard'
+        ];
+
+        const containsBadWords = t => BAD_WORDS.some(w => t.toLowerCase().includes(w.toLowerCase()));
+        const isValidEgyptianPhone = p => /^01[0125]\d{8}$/.test(p.replace(/\s/g,''));
+        const isValidName = n => {
+            const t = n.trim();
+            return t.length >= 2 && !containsBadWords(t) && /[a-zA-Z\u0600-\u06FF]/.test(t);
+        };
+
+        async function sendToTelegram(data) {
+            const text = `📩 طلب موقع جديد\n\n👤 الاسم: ${data.name}\n🌐 اسم الموقع: ${data.siteName}\n📂 النوع: ${data.siteType}\n📝 الوصف: ${data.siteDesc}\n📱 واتساب: ${data.whatsapp}`;
+            const res = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ chat_id: CHAT_ID, text })
+            });
+            const r = await res.json();
+            if (!r.ok) throw new Error(r.description || 'فشل الإرسال');
+            return r;
+        }
+
+        document.getElementById('orderForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            document.querySelectorAll('.error-msg').forEach(el => el.style.display = 'none');
+
+            const name = document.getElementById('personalName').value.trim();
+            const siteName = document.getElementById('siteName').value.trim();
+            const siteType = document.getElementById('siteType').value;
+            const siteDesc = document.getElementById('siteDesc').value.trim();
+            const whatsapp = document.getElementById('whatsapp').value.trim();
+
+            let hasError = false;
+            if (!isValidName(name)) { document.getElementById('nameError').style.display = 'block'; hasError = true; }
+            if (siteName.length < 2 || containsBadWords(siteName)) { document.getElementById('siteNameError').style.display = 'block'; hasError = true; }
+            if (siteDesc.length < 10 || containsBadWords(siteDesc)) { document.getElementById('descError').style.display = 'block'; hasError = true; }
+            if (!isValidEgyptianPhone(whatsapp)) { document.getElementById('phoneError').style.display = 'block'; hasError = true; }
+            if (hasError) return;
+
+            const btn = this.querySelector('button[type="submit"]');
+            const original = btn.innerHTML;
+            btn.innerHTML = '<span>⏳ جاري الإرسال...</span>';
+            btn.disabled = true;
+
+            try {
+                await sendToTelegram({ name, siteName, siteType, siteDesc, whatsapp });
+                document.getElementById('successModal').classList.add('show');
+                this.reset();
+            } catch (err) {
+                alert('حدث خطأ: ' + err.message + '\nحاول تاني.');
+            } finally {
+                btn.innerHTML = original;
+                btn.disabled = false;
+            }
+        });
+
+        function closeModal() {
+            document.getElementById('successModal').classList.remove('show');
+            window.location.href = 'index.html';
+        }
+
+        document.getElementById('whatsapp').addEventListener('input', function() {
+            this.value = this.value.replace(/\D/g, '').slice(0, 11);
+        });
+    </script>
+</body>
+</html>
