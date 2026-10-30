@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>تم إرسال طلبك بنجاح | يوسف روسي</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;900&family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #070812;
+    --glass: rgba(255,255,255,0.04);
+    --glass-strong: rgba(255,255,255,0.07);
+    --border: rgba(255,255,255,0.08);
+    --border-strong: rgba(255,255,255,0.15);
+    --primary: #7c5cff;
+    --primary-2: #00e5ff;
+    --accent: #ff4ecd;
+    --success: #22d3a7;
+    --text: #eef1ff;
+    --muted: #8b91b5;
+    --radius: 20px;
+  }
+
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html,body{height:100%;}
+
+  body{
+    font-family:'Tajawal', 'Cairo', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.8;
+    overflow-x: hidden;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+  }
+
+  /* ====== خلفية متحركة ====== */
+  .aurora{
+    position: fixed;
+    inset: 0;
+    z-index: -2;
+    overflow: hidden;
+    pointer-events: none;
+  }
+  .aurora::before,
+  .aurora::after,
+  .aurora .blob3{
+    content:'';
+    position: absolute;
+    width: 700px;
+    height: 700px;
+    border-radius: 50%;
+    filter: blur(140px);
+    opacity: 0.45;
+    animation: float 18s ease-in-out infinite;
+  }
+  .aurora::before{
+    background: radial-gradient(circle, #7c5cff, transparent 70%);
+    top: -250px;
+    right: -200px;
+  }
+  .aurora::after{
+    background: radial-gradient(circle, #00e5ff, transparent 70%);
+    bottom: -300px;
+    left: -250px;
+    animation-delay: -6s;
+  }
+  .aurora .blob3{
+    background: radial-gradient(circle, #22d3a7, transparent 70%);
+    top: 40%;
+    left: 40%;
+    width: 500px;
+    height: 500px;
+    opacity: 0.25;
+    animation-delay: -12s;
+  }
+  @keyframes float{
+    0%,100%{transform: translate(0,0) scale(1);}
+    33%{transform: translate(60px,-40px) scale(1.1);}
+    66%{transform: translate(-40px,60px) scale(0.95);}
+  }
+
+  .grid-overlay{
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    background-image:
+      linear-gradient(rgba(124,92,255,0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(124,92,255,0.05) 1px, transparent 1px);
+    background-size: 50px 50px;
+    mask-image: radial-gradient(ellipse at center, black 40%, transparent 80%);
+    -webkit-mask-image: radial-gradient(ellipse at center, black 40%, transparent 80%);
+    pointer-events: none;
+  }
+
+  /* ====== الهيدر ====== */
+  header{
+    padding: 20px 28px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .logo{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 20px;
+    font-weight: 900;
+    font-family:'Cairo',sans-serif;
+    text-decoration: none;
+  }
+  .logo-mark{
+    width: 36px; height: 36px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, var(--primary), var(--primary-2));
+    display: grid;
+    place-items: center;
+    font-size: 16px;
+    color: #070812;
+    box-shadow: 0 0 20px rgba(124,92,255,0.5);
+  }
+  .logo-text{
+    background: linear-gradient(90deg, #fff, #b9b5ff);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  /* ====== المحتوى الرئيسي ====== */
+  .success-wrap{
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 24px;
+  }
+
+  .success-card{
+    max-width: 620px;
+    width: 100%;
+    background: var(--glass);
+    border: 1px solid var(--border-strong);
+    border-radius: 28px;
+    padding: 56px 44px;
+    text-align: center;
+    backdrop-filter: blur(20px);
+    position: relative;
+    overflow: hidden;
+    animation: cardIn 0.8s cubic-bezier(.34,1.56,.64,1);
+  }
+  @keyframes cardIn{
+    from{opacity:0;transform: translateY(40px) scale(0.95);}
+    to{opacity:1;transform: translateY(0) scale(1);}
+  }
+  .success-card::before{
+    content:'';
+    position: absolute;
+    top: -50%; left: -50%;
+    width: 200%; height: 200%;
+    background: conic-gradient(from 0deg, transparent, rgba(34,211,167,0.12), transparent, rgba(124,92,255,0.12), transparent);
+    animation: rotate 22s linear infinite;
+    z-index: -1;
+  }
+  @keyframes rotate{
+    to{transform: rotate(360deg);}
+  }
+
+  /* أيقونة النجاح */
+  .success-icon{
+    width: 110px;
+    height: 110px;
+    margin: 0 auto 30px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, rgba(34,211,167,0.2), rgba(34,211,167,0.05));
+    display: grid;
+    place-items: center;
+    position: relative;
+    animation: iconPulse 2s ease-in-out infinite;
+  }
+  .success-icon::before,
+  .success-icon::after{
+    content:'';
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    border: 2px solid rgba(34,211,167,0.4);
+    animation: ripple 2.5s ease-out infinite;
+  }
+  .success-icon::after{
+    animation-delay: 1.25s;
+  }
+  @keyframes ripple{
+    0%{transform: scale(1);opacity: 0.8;}
+    100%{transform: scale(1.6);opacity: 0;}
+  }
+  @keyframes iconPulse{
+    0%,100%{transform: scale(1);}
+    50%{transform: scale(1.05);}
+  }
+
+  .checkmark{
+    width: 60px;
+    height: 60px;
+    stroke: var(--success);
+    stroke-width: 4;
+    fill: none;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-dasharray: 100;
+    stroke-dashoffset: 100;
+    animation: drawCheck 0.8s ease-out 0.3s forwards;
+  }
+  @keyframes drawCheck{
+    to{stroke-dashoffset: 0;}
+  }
+
+  /* النصوص */
+  .success-title{
+    font-family:'Cairo',sans-serif;
+    font-size: clamp(24px, 4.5vw, 34px);
+    font-weight: 900;
+    margin-bottom: 16px;
+    line-height: 1.3;
+  }
+  .success-title .gradient{
+    background: linear-gradient(135deg, var(--success), var(--primary-2));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .success-text{
+    color: var(--muted);
+    font-size: 16px;
+    margin-bottom: 32px;
+    line-height: 1.9;
+  }
+  .success-text strong{
+    color: var(--text);
+  }
+
+  /* صندوق رقم الواتساب */
+  .phone-box{
+    background: linear-gradient(135deg, rgba(34,211,167,0.1), rgba(0,229,255,0.06));
+    border: 1px solid rgba(34,211,167,0.3);
+    border-radius: 16px;
+    padding: 22px 26px;
+    margin-bottom: 32px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    animation: fadeUp 0.6s ease-out 0.6s both;
+  }
+  @keyframes fadeUp{
+    from{opacity:0;transform: translateY(15px);}
+    to{opacity:1;transform: translateY(0);}
+  }
+  .phone-box-icon{
+    flex-shrink: 0;
+    width: 48px;
+    height: 48px;
+    border-radius: 14px;
+    background: rgba(34,211,167,0.2);
+    display: grid;
+    place-items: center;
+    font-size: 24px;
+  }
+  .phone-box-content{
+    flex: 1;
+    text-align: right;
+  }
+  .phone-box-label{
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 4px;
+  }
+  .phone-box-number{
+    font-family:'Cairo',sans-serif;
+    font-size: 20px;
+    font-weight: 900;
+    color: var(--success);
+    direction: ltr;
+    text-align: right;
+    letter-spacing: 1px;
+  }
+
+  /* خطوات لاحقة */
+  .next-steps{
+    background: rgba(255,255,255,0.03);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 24px;
+    margin-bottom: 32px;
+    text-align: right;
+    animation: fadeUp 0.6s ease-out 0.8s both;
+  }
+  .next-steps-title{
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--primary-2);
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .step{
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 10px 0;
+    font-size: 14px;
+    color: var(--muted);
+    line-height: 1.7;
+  }
+  .step-num{
+    flex-shrink: 0;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: rgba(124,92,255,0.15);
+    border: 1px solid rgba(124,92,255,0.3);
+    color: var(--primary-2);
+    font-weight: 700;
+    font-size: 13px;
+    display: grid;
+    place-items: center;
+    font-family:'Cairo',sans-serif;
+  }
+
+  /* أزرار */
+  .actions{
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    justify-content: center;
+    animation: fadeUp 0.6s ease-out 1s both;
+  }
+  .btn{
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 14px 28px;
+    border-radius: 14px;
+    font-weight: 700;
+    text-decoration: none;
+    cursor: pointer;
+    border: none;
+    transition: .3s cubic-bezier(.4,0,.2,1);
+    font-family: inherit;
+    font-size: 15px;
+  }
+  .btn-primary{
+    background: linear-gradient(135deg, var(--success), var(--primary-2));
+    color: #070812;
+    box-shadow: 0 8px 30px rgba(34,211,167,0.4);
+  }
+  .btn-primary:hover{
+    transform: translateY(-3px);
+    box-shadow: 0 15px 40px rgba(34,211,167,0.6);
+  }
+  .btn-ghost{
+    background: var(--glass);
+    color: var(--text);
+    border: 1px solid var(--border-strong);
+  }
+  .btn-ghost:hover{
+    background: var(--glass-strong);
+    border-color: var(--primary);
+    transform: translateY(-3px);
+  }
+
+  /* ====== الفوتر ====== */
+  footer{
+    text-align: center;
+    padding: 24px;
+    color: var(--muted);
+    font-size: 13px;
+  }
+
+  /* احتفال بالقصاصات */
+  .confetti{
+    position: fixed;
+    width: 10px;
+    height: 10px;
+    top: -20px;
+    z-index: 100;
+    pointer-events: none;
+    animation: fall linear forwards;
+  }
+  @keyframes fall{
+    to{
+      transform: translateY(105vh) rotate(720deg);
+      opacity: 0;
+    }
+  }
+
+  @media (max-width: 600px){
+    .success-card{padding: 40px 24px;}
+    .success-icon{width: 90px; height: 90px;}
+    .checkmark{width: 50px; height: 50px;}
+    .actions{flex-direction: column;}
+    .actions .btn{width: 100%;}
+    .phone-box{padding: 18px;}
+    .phone-box-number{font-size: 17px;}
+  }
+</style>
+</head>
+<body>
+
+<!-- الخلفية -->
+<div class="aurora"><div class="blob3"></div></div>
+<div class="grid-overlay"></div>
+
+<!-- الهيدر -->
+<header>
+  <a href="index.html" class="logo">
+    <div class="logo-mark">✦</div>
+    <span class="logo-text">يوسف روسي</span>
+  </a>
+</header>
+
+<!-- المحتوى -->
+<main class="success-wrap">
+  <div class="success-card">
+
+    <!-- أيقونة النجاح -->
+    <div class="success-icon">
+      <svg class="checkmark" viewBox="0 0 60 60">
+        <polyline points="15,32 26,43 46,20"></polyline>
+      </svg>
+    </div>
+
+    <!-- العنوان -->
+    <h1 class="success-title">
+      تم <span class="gradient">إرسال طلبك</span> بنجاح! 🎉
+    </h1>
+
+    <!-- النص -->
+    <p class="success-text">
+      شكراً لك على طلبك! تم استلام <strong>مواصفات موقعك</strong> بنجاح.
+      <br>
+      سيتم الرد عليك في أقرب وقت ممكن عبر رقم الواتساب الذي أدخلته.
+    </p>
+
+    <!-- صندوق رقم الواتساب -->
+    <div class="phone-box">
+      <div class="phone-box-icon">📱</div>
+      <div class="phone-box-content">
+        <div class="phone-box-label">سيتم الرد على رقم الواتساب</div>
+        <div class="phone-box-number" id="userPhone">— — —</div>
+      </div>
+    </div>
+
+    <!-- الخطوات القادمة -->
+    <div class="next-steps">
+      <div class="next-steps-title">
+        <span>🚀</span>
+        <span>إيه اللي هيحصل بعد كده؟</span>
+      </div>
+      <div class="step">
+        <span class="step-num">1</span>
+        <span>هيتم مراجعة مواصفات موقعك بعناية.</span>
+      </div>
+      <div class="step">
+        <span class="step-num">2</span>
+        <span>هيتم التواصل معاك على رقم الواتساب اللي أدخلته.</span>
+      </div>
+      <div class="step">
+        <span class="step-num">3</span>
+        <span>هيبدأ تنفيذ موقعك فوراً بعد الاتفاق على التفاصيل.</span>
+      </div>
+    </div>
+
+    <!-- الأزرار -->
+    <div class="actions">
+      <a href="index.html" class="btn btn-primary">
+        ✨ العودة للرئيسية
+      </a>
+      <a href="https://wa.me/2" id="whatsappBtn" target="_blank" rel="noopener" class="btn btn-ghost">
+        💬 تواصل عبر واتساب
+      </a>
+    </div>
+
+  </div>
+</main>
+
+<!-- الفوتر -->
+<footer>
+  © <span id="year"></span> يوسف (روسي) — جميع الحقوق محفوظة.
+</footer>
+
+<script>
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  /* ============================================================
+     استرجاع رقم الهاتف من الصفحة السابقة
+     (بنستخدم localStorage عشان الرقم يتبعت من index.html)
+     ============================================================ */
+  function getStoredPhone(){
+    try{
+      const phone = localStorage.getItem('userPhone');
+      if (phone) return phone;
+    }catch(e){}
+    return null;
+  }
+
+  const phone = getStoredPhone();
+  const phoneEl = document.getElementById('userPhone');
+  const waBtn = document.getElementById('whatsappBtn');
+
+  if (phone){
+    // عرض الرقم بشكل منسق
+    phoneEl.textContent = phone;
+
+    // تحديث لينك الواتساب ليفتح محادثة مع نفس الرقم (لو حبيت)
+    // ملاحظة: ده بيفتح واتساب الشخص نفسه، مش رقمك
+    // لو عايز تخليه يتواصل معاك انت، غير الرقم تحت 👇
+    const myNumber = '201012345678'; // ← غيّر ده لرقمك الحقيقي
+    waBtn.href = `https://wa.me/${myNumber}?text=` +
+                 encodeURIComponent(`مرحباً يوسف، أنا ${localStorage.getItem('userName') || 'عميل جديد'}، بعتلك طلب موقع من الموقع.`);
+  } else {
+    phoneEl.textContent = 'تم استلام طلبك';
+  }
+
+  /* ============================================================
+     تأثير الاحتفال (Confetti) 🎊
+     ============================================================ */
+  function launchConfetti(){
+    const colors = ['#22d3a7', '#7c5cff', '#00e5ff', '#ff4ecd', '#ffd166'];
+    const shapes = ['circle', 'square', 'triangle'];
+    const count = 80;
+
+    for (let i = 0; i < count; i++){
+      const confetti = document.createElement('div');
+      confetti.className = 'confetti';
+
+      const color = colors[Math.floor(Math.random() * colors.length)];
+      const shape = shapes[Math.floor(Math.random() * shapes.length)];
+      const size = Math.random() * 8 + 6;
+      const left = Math.random() * 100;
+      const delay = Math.random() * 0.8;
+      const duration = Math.random() * 1.5 + 2.5;
+
+      confetti.style.left = left + 'vw';
+      confetti.style.width = size + 'px';
+      confetti.style.height = size + 'px';
+      confetti.style.background = color;
+      confetti.style.animationDuration = duration + 's';
+      confetti.style.animationDelay = delay + 's';
+
+      if (shape === 'circle'){
+        confetti.style.borderRadius = '50%';
+      } else if (shape === 'triangle'){
+        confetti.style.background = 'transparent';
+        confetti.style.width = '0';
+        confetti.style.height = '0';
+        confetti.style.borderLeft = (size/2) + 'px solid transparent';
+        confetti.style.borderRight = (size/2) + 'px solid transparent';
+        confetti.style.borderBottom = size + 'px solid ' + color;
+      } else {
+        confetti.style.borderRadius = '2px';
+      }
+
+      document.body.appendChild(confetti);
+
+      setTimeout(() => confetti.remove(), (duration + delay) * 1000 + 500);
+    }
+  }
+
+  // إطلاق الاحتفال بعد تحميل الصفحة بشوية
+  window.addEventListener('load', () => {
+    setTimeout(launchConfetti, 400);
+  });
+</script>
+
+</body>
+</html>
